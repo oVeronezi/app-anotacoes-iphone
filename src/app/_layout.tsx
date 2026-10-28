@@ -28,6 +28,12 @@ const tema = {
   },
 };
 
+const opcoesModal = {
+  presentation: 'transparentModal',
+  animation: 'fade',
+  contentStyle: { backgroundColor: 'transparent' },
+} as const;
+
 export default function RootLayout() {
   const [fontesProntas] = useFonts({ Inter_400Regular, Inter_500Medium, Inter_600SemiBold });
   const carregado = useCarregado();
@@ -54,14 +60,8 @@ export default function RootLayout() {
         <PhoneFrame>
           <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: cores.fundo } }}>
             <Stack.Screen name="index" />
-            <Stack.Screen
-              name="item"
-              options={{
-                presentation: 'transparentModal',
-                animation: 'fade',
-                contentStyle: { backgroundColor: 'transparent' },
-              }}
-            />
+            <Stack.Screen name="item" options={opcoesModal} />
+            <Stack.Screen name="info" options={opcoesModal} />
           </Stack>
         </PhoneFrame>
       </ThemeProvider>

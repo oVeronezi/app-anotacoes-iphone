@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icone } from '@/components/Icone';
@@ -26,6 +27,14 @@ export function MonthHeader() {
         accessibilityLabel="Próximo mês">
         <Icone nome="direita" cor={cores.rosa} tamanho={24} espessura={2.5} />
       </Pressable>
+      <Pressable
+        onPress={() => router.push('/info')}
+        hitSlop={8}
+        style={styles.info}
+        accessibilityRole="button"
+        accessibilityLabel="Informações sobre seus dados">
+        <Icone nome="info" cor={cores.textoSecundario} tamanho={22} />
+      </Pressable>
     </View>
   );
 }
@@ -35,9 +44,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 16,
+    gap: 12,
     paddingVertical: 12,
   },
   seta: { padding: 4 },
-  mes: { ...tipo.mes, minWidth: 200, textAlign: 'center' },
+  mes: { ...tipo.mes, minWidth: 190, textAlign: 'center' },
+  info: {
+    position: 'absolute',
+    right: -4,
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

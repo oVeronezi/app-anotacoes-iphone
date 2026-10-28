@@ -7,6 +7,7 @@ import { Icone } from '@/components/Icone';
 import { COR_SECAO } from '@/components/ItemRow';
 import { useFinance, type Secao } from '@/store/useFinance';
 import { cores, fontes, LARGURA_MAX, tipo } from '@/theme';
+import { areaSegura } from '@/utils/areaSegura';
 import { centavosParaCampo, digitosParaCentavos } from '@/utils/money';
 import { nomeDoMes } from '@/utils/month';
 
@@ -73,7 +74,7 @@ export default function ItemModal() {
     <View style={styles.tela}>
       <Pressable style={StyleSheet.absoluteFill} onPress={fechar} accessibilityLabel="Fechar" />
       {/* Perto do topo para ficar acima do teclado do iPhone (~336 pt no iPhone 11). */}
-      <View style={[styles.folha, { marginTop: insets.top + 16 }]}>
+      <View style={[styles.folha, { marginTop: areaSegura('top', insets.top, 16) }]}>
         <View style={styles.topo}>
           <Text style={[tipo.tituloSecao, styles.flex]}>{tituloTela}</Text>
           <Pressable onPress={fechar} hitSlop={12} accessibilityLabel="Fechar">

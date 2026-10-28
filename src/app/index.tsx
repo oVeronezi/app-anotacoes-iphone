@@ -1,6 +1,7 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { AvisoSafari } from '@/components/AvisoSafari';
 import { BackupBar } from '@/components/BackupBar';
 import { CopyMonthCard } from '@/components/CopyMonthCard';
 import { Fab } from '@/components/Fab';
@@ -9,6 +10,7 @@ import { Section } from '@/components/Section';
 import { SummaryRow } from '@/components/SummaryRow';
 import { useFinance, useMes } from '@/store/useFinance';
 import { cores, LARGURA_MAX } from '@/theme';
+import { areaSegura } from '@/utils/areaSegura';
 
 export default function Inicio() {
   const insets = useSafeAreaInsets();
@@ -21,10 +23,14 @@ export default function Inicio() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           styles.conteudo,
-          { paddingTop: insets.top + 4, paddingBottom: insets.bottom + 110 },
+          {
+            paddingTop: areaSegura('top', insets.top, 4),
+            paddingBottom: areaSegura('bottom', insets.bottom, 110),
+          },
         ]}>
         <View style={styles.coluna}>
           <MonthHeader />
+          <AvisoSafari />
           <SummaryRow />
           <CopyMonthCard />
           <Section secao="fixos" itens={mes.fixos} />

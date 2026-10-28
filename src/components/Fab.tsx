@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icone } from '@/components/Icone';
 import { cores } from '@/theme';
+import { areaSegura } from '@/utils/areaSegura';
 
 export function Fab() {
   const insets = useSafeAreaInsets();
@@ -12,7 +13,10 @@ export function Fab() {
       onPress={() => router.push('/item')}
       style={({ pressed }) => [
         styles.botao,
-        { bottom: insets.bottom + 20, right: insets.right + 20 },
+        {
+          bottom: areaSegura('bottom', insets.bottom, 20),
+          right: areaSegura('right', insets.right, 20),
+        },
         pressed && { transform: [{ scale: 0.94 }] },
       ]}
       accessibilityRole="button"

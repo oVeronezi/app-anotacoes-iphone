@@ -36,5 +36,5 @@ export default function Root({ children }: PropsWithChildren) {
 
 const css = `
 html, body { background-color: #1A1719; color-scheme: dark; overscroll-behavior: none; }
-body { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; }
+body { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; position: fixed; inset: 0; }
 `;

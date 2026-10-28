@@ -14,6 +14,7 @@ const CAMINHOS = {
   check: ['M20 6 9 17l-5-5'],
   fechar: ['M18 6 6 18', 'm6 6 12 12'],
   copiar: ['M8 8h12v12H8z', 'M4 16V4h12'],
+  info: ['M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0Z', 'M12 16v-4', 'M12 8h.01'],
 };
 
 export type NomeIcone = keyof typeof CAMINHOS;

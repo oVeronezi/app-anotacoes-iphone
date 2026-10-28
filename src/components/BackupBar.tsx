@@ -1,9 +1,10 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useFinance } from '@/store/useFinance';
 import { cores, fontes, tipo } from '@/theme';
-import { confirmar, escolherBackup, exportarBackup } from '@/utils/backup';
+import { confirmar, escolherBackup, exportarDadosAtuais } from '@/utils/backup';
 
 const TRINTA_DIAS = 30 * 24 * 60 * 60 * 1000;
 
@@ -15,17 +16,13 @@ export function BackupBar() {
   const atrasado =
     temDados && (!ultimoBackup || agora - new Date(ultimoBackup).getTime() > TRINTA_DIAS);
 
-  const exportar = async () => {
-    const { meses, compras, marcarBackup } = useFinance.getState();
-    if (await exportarBackup({ meses, compras })) marcarBackup();
-  };
-
   const importar = async () => {
     const dados = await escolherBackup();
     if (!dados) return;
     const ok = await confirmar(
       'Importar backup',
-      'Os dados atuais deste aparelho serão substituídos pelos do arquivo.',
+      'Todos os dados atuais deste iPhone serão apagados e substituídos pelos do arquivo. ' +
+        'Se quiser guardar os atuais, cancele e exporte um backup antes.',
     );
     if (ok) useFinance.getState().importar(dados);
   };
@@ -34,14 +31,17 @@ export function BackupBar() {
     <View style={styles.bloco}>
       <Text style={[tipo.tituloSecao]}>Backup</Text>
       {atrasado && (
-        <Text style={styles.lembrete}>
-          {ultimoBackup
-            ? 'Faz mais de um mês desde o último backup. Exporte um novo arquivo.'
-            : 'Seus dados ficam só neste aparelho. Exporte um backup de vez em quando.'}
-        </Text>
+        <Pressable onPress={() => router.push('/info')} accessibilityRole="link">
+          <Text style={styles.lembrete}>
+            {ultimoBackup
+              ? 'Faz mais de um mês desde o último backup. Exporte um novo arquivo.'
+              : 'Seus dados ficam só neste iPhone. Exporte um backup de vez em quando.'}{' '}
+            <Text style={styles.saibaMais}>Saiba mais</Text>
+          </Text>
+        </Pressable>
       )}
       <View style={styles.linha}>
-        <Pressable style={[styles.botao, styles.principal]} onPress={exportar}>
+        <Pressable style={[styles.botao, styles.principal]} onPress={exportarDadosAtuais}>
           <Text style={[styles.textoBotao, { color: cores.fundo }]}>Exportar</Text>
         </Pressable>
         <Pressable style={styles.botao} onPress={importar}>
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: cores.rosa,
   },
+  saibaMais: { fontFamily: fontes.semibold, textDecorationLine: 'underline' },
   linha: { flexDirection: 'row', gap: 12 },
   botao: {
     flex: 1,

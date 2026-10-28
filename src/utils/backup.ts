@@ -1,6 +1,6 @@
 import { Alert, Platform } from 'react-native';
 
-import { validarDados, type Dados } from '@/store/useFinance';
+import { useFinance, validarDados, type Dados } from '@/store/useFinance';
 
 export function confirmar(titulo: string, mensagem: string): Promise<boolean> {
   if (Platform.OS === 'web') return Promise.resolve(window.confirm(`${titulo}\n\n${mensagem}`));
@@ -51,6 +51,12 @@ export async function exportarBackup(dados: Dados): Promise<boolean> {
   link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   return true;
+}
+
+/** Exporta os dados atuais do app e registra a data do backup. */
+export async function exportarDadosAtuais() {
+  const { meses, compras, marcarBackup } = useFinance.getState();
+  if (await exportarBackup({ meses, compras })) marcarBackup();
 }
 
 /** Abre o seletor de arquivo e devolve os dados lidos, ou null se cancelado/inválido. */
