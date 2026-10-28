@@ -59,6 +59,14 @@ const semArmazenamento: StateStorage = {
   removeItem: () => {},
 };
 
+// Se o navegador bloquear o armazenamento, o persist nunca termina de carregar e a tela
+// fica vazia; aqui o erro vira "sem dados salvos" e o app abre mesmo assim.
+const armazenamentoSeguro: StateStorage = {
+  getItem: (nome) => AsyncStorage.getItem(nome).catch(() => null),
+  setItem: (nome, valor) => AsyncStorage.setItem(nome, valor).catch(() => {}),
+  removeItem: (nome) => AsyncStorage.removeItem(nome).catch(() => {}),
+};
+
 export const useFinance = create<Estado>()(
   persist(
     (set, get) => {
@@ -136,7 +144,7 @@ export const useFinance = create<Estado>()(
       name: 'financas',
       version: 1,
       storage: createJSONStorage(() =>
-        typeof window === 'undefined' ? semArmazenamento : AsyncStorage,
+        typeof window === 'undefined' ? semArmazenamento : armazenamentoSeguro,
       ),
       partialize: (s) => ({ meses: s.meses, compras: s.compras, ultimoBackup: s.ultimoBackup }),
     },

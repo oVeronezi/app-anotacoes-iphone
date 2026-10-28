@@ -18,6 +18,7 @@ export default function Inicio() {
   return (
     <View style={styles.tela}>
       <ScrollView
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           styles.conteudo,
           { paddingTop: insets.top + 4, paddingBottom: insets.bottom + 110 },
@@ -39,6 +40,6 @@ export default function Inicio() {
 
 const styles = StyleSheet.create({
   tela: { flex: 1, backgroundColor: cores.fundo },
-  conteudo: { paddingHorizontal: 20, alignItems: 'center' },
+  conteudo: { paddingHorizontal: 16, alignItems: 'center' },
   coluna: { width: '100%', maxWidth: LARGURA_MAX, gap: 32 },
 });

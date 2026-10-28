@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { soma, useMes } from '@/store/useFinance';
-import { cores, tipo } from '@/theme';
-import { formatBRL } from '@/utils/money';
+import { cores, fontes, tipo } from '@/theme';
+import { partesBRL } from '@/utils/money';
 
 const GAP = 12;
+const TAMANHO_PREFIXO = 13;
 
 export function SummaryRow() {
   const mes = useMes();
@@ -19,17 +20,20 @@ export function SummaryRow() {
     {
       rotulo: 'Saldo',
       cor: saldo < 0 ? cores.rosa : cores.verde,
-      texto: formatBRL(saldo),
+      ...partesBRL(saldo),
       corValor: saldo < 0 ? cores.rosa : cores.texto,
     },
-    { rotulo: 'Salário', cor: cores.verde, texto: formatBRL(mes.salario), corValor: cores.texto },
-    { rotulo: 'Gastos', cor: cores.rosa, texto: formatBRL(gastos), corValor: cores.texto },
+    { rotulo: 'Salário', cor: cores.verde, ...partesBRL(mes.salario), corValor: cores.texto },
+    { rotulo: 'Gastos', cor: cores.rosa, ...partesBRL(gastos), corValor: cores.texto },
   ];
 
-  // 24 px quando cabe; diminui junto para as três colunas quando algum valor é longo.
+  // O número fica em 24 px quando cabe; se algum valor for longo, as três colunas
+  // diminuem juntas. O "R$" é menor e fica fora da conta (≈ 0,62 em por caractere).
   const larguraColuna = (largura - GAP * 2) / 3;
-  const maiorTexto = Math.max(...colunas.map((c) => c.texto.length));
-  const tamanho = largura ? Math.min(24, Math.floor(larguraColuna / (maiorTexto * 0.6))) : 24;
+  const maiorPrefixo = Math.max(...colunas.map((c) => c.prefixo.length));
+  const maiorNumero = Math.max(...colunas.map((c) => c.numero.length));
+  const disponivel = larguraColuna - maiorPrefixo * TAMANHO_PREFIXO * 0.62;
+  const tamanho = largura ? Math.min(24, Math.floor(disponivel / (maiorNumero * 0.62))) : 24;
 
   return (
     <View style={styles.bloco}>
@@ -44,7 +48,8 @@ export function SummaryRow() {
               <Text
                 style={[styles.valor, { color: c.corValor, fontSize: tamanho }]}
                 numberOfLines={1}>
-                {c.texto}
+                <Text style={styles.prefixo}>{c.prefixo}</Text>
+                {c.numero}
               </Text>
             </>
           );
@@ -77,4 +82,5 @@ const styles = StyleSheet.create({
     paddingBottom: 3,
   },
   valor: { ...tipo.valorResumo },
+  prefixo: { fontFamily: fontes.medium, fontSize: TAMANHO_PREFIXO },
 });

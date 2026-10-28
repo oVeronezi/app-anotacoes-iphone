@@ -7,9 +7,10 @@ import { DarkTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { PhoneFrame } from '@/components/PhoneFrame';
 import { useCarregado } from '@/store/useFinance';
 import { cores } from '@/theme';
 
@@ -36,6 +37,13 @@ export default function RootLayout() {
     if (pronto) SplashScreen.hideAsync();
   }, [pronto]);
 
+  // Service worker (gerado no `npm run build`) deixa o app funcionando offline.
+  useEffect(() => {
+    if (Platform.OS === 'web' && !__DEV__ && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+  }, []);
+
   // Até carregar fontes e dados salvos, só o fundo (também é o que vai no HTML estático).
   if (!pronto) return <View style={{ flex: 1, backgroundColor: cores.fundo }} />;
 
@@ -43,17 +51,19 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: cores.fundo }}>
       <ThemeProvider value={tema}>
         <StatusBar style="light" />
-        <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: cores.fundo } }}>
-          <Stack.Screen name="index" />
-          <Stack.Screen
-            name="item"
-            options={{
-              presentation: 'transparentModal',
-              animation: 'fade',
-              contentStyle: { backgroundColor: 'transparent' },
-            }}
-          />
-        </Stack>
+        <PhoneFrame>
+          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: cores.fundo } }}>
+            <Stack.Screen name="index" />
+            <Stack.Screen
+              name="item"
+              options={{
+                presentation: 'transparentModal',
+                animation: 'fade',
+                contentStyle: { backgroundColor: 'transparent' },
+              }}
+            />
+          </Stack>
+        </PhoneFrame>
       </ThemeProvider>
     </GestureHandlerRootView>
   );

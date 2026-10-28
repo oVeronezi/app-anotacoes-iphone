@@ -44,4 +44,5 @@ export const tipo = {
   },
 };
 
-export const LARGURA_MAX = 560;
+// Largura do iPhone 11 (pt): a coluna nunca passa disso.
+export const LARGURA_MAX = 414;

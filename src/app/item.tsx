@@ -72,7 +72,8 @@ export default function ItemModal() {
   return (
     <View style={styles.tela}>
       <Pressable style={StyleSheet.absoluteFill} onPress={fechar} accessibilityLabel="Fechar" />
-      <View style={[styles.folha, { marginTop: insets.top + 48 }]}>
+      {/* Perto do topo para ficar acima do teclado do iPhone (~336 pt no iPhone 11). */}
+      <View style={[styles.folha, { marginTop: insets.top + 16 }]}>
         <View style={styles.topo}>
           <Text style={[tipo.tituloSecao, styles.flex]}>{tituloTela}</Text>
           <Pressable onPress={fechar} hitSlop={12} accessibilityLabel="Fechar">
