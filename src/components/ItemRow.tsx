@@ -12,6 +12,7 @@ export const COR_SECAO: Record<Secao, string> = {
   fixos: cores.azul,
   variaveis: cores.verde,
   compras: cores.rosa,
+  contas: cores.amarelo,
 };
 
 type Props = { secao: Secao; item: Item | Compra };

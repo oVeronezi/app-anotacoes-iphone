@@ -62,6 +62,9 @@ export default function RootLayout() {
             <Stack.Screen name="index" />
             <Stack.Screen name="item" options={opcoesModal} />
             <Stack.Screen name="info" options={opcoesModal} />
+            <Stack.Screen name="contas" />
+            <Stack.Screen name="menu" options={opcoesModal} />
+            <Stack.Screen name="pagamento" options={opcoesModal} />
           </Stack>
         </PhoneFrame>
       </ThemeProvider>

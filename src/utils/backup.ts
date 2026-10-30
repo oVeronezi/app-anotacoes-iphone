@@ -55,8 +55,8 @@ export async function exportarBackup(dados: Dados): Promise<boolean> {
 
 /** Exporta os dados atuais do app e registra a data do backup. */
 export async function exportarDadosAtuais() {
-  const { meses, compras, marcarBackup } = useFinance.getState();
-  if (await exportarBackup({ meses, compras })) marcarBackup();
+  const { meses, compras, contas, marcarBackup } = useFinance.getState();
+  if (await exportarBackup({ meses, compras, contas })) marcarBackup();
 }
 
 /** Abre o seletor de arquivo e devolve os dados lidos, ou null se cancelado/inválido. */
@@ -75,7 +75,7 @@ export function escolherBackup(): Promise<Dados | null> {
       try {
         const lido = JSON.parse(await arquivo.text());
         if (validarDados(lido)) {
-          resolve({ meses: lido.meses, compras: lido.compras });
+          resolve({ meses: lido.meses, compras: lido.compras, contas: lido.contas ?? [] });
           return;
         }
       } catch {

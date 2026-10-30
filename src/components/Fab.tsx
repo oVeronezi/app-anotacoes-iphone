@@ -6,11 +6,13 @@ import { Icone } from '@/components/Icone';
 import { cores } from '@/theme';
 import { areaSegura } from '@/utils/areaSegura';
 
-export function Fab() {
+type Props = { params?: Record<string, string> };
+
+export function Fab({ params }: Props) {
   const insets = useSafeAreaInsets();
   return (
     <Pressable
-      onPress={() => router.push('/item')}
+      onPress={() => router.push({ pathname: '/item', params })}
       style={({ pressed }) => [
         styles.botao,
         {

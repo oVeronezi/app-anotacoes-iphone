@@ -10,12 +10,14 @@ const TITULOS: Record<Secao, string> = {
   fixos: 'Fixos',
   variaveis: 'Variáveis',
   compras: 'Compras',
+  contas: 'Contas',
 };
 
 const VAZIO: Record<Secao, string> = {
   fixos: 'Nenhum gasto fixo neste mês.',
   variaveis: 'Nenhum gasto variável neste mês.',
   compras: 'Nada na lista de compras.',
+  contas: 'Nenhuma conta cadastrada.',
 };
 
 export function Tracejado() {

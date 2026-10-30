@@ -6,6 +6,7 @@ export const cores = {
   rosa: '#FF8EDD',
   verde: '#638C6A',
   azul: '#006CC6',
+  amarelo: '#E0A84F',
 };
 
 export const fontes = {

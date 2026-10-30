@@ -10,7 +10,9 @@ const TRINTA_DIAS = 30 * 24 * 60 * 60 * 1000;
 
 export function BackupBar() {
   const ultimoBackup = useFinance((s) => s.ultimoBackup);
-  const temDados = useFinance((s) => Object.keys(s.meses).length > 0 || s.compras.length > 0);
+  const temDados = useFinance(
+    (s) => Object.keys(s.meses).length > 0 || s.compras.length > 0 || s.contas.length > 0,
+  );
   const [agora] = useState(() => Date.now());
 
   const atrasado =

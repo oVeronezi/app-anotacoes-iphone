@@ -13,6 +13,14 @@ export function MonthHeader() {
   return (
     <View style={styles.linha}>
       <Pressable
+        onPress={() => router.push('/menu')}
+        hitSlop={8}
+        style={[styles.lateral, styles.menu]}
+        accessibilityRole="button"
+        accessibilityLabel="Menu">
+        <Icone nome="menu" cor={cores.textoSecundario} tamanho={24} espessura={3.5} />
+      </Pressable>
+      <Pressable
         onPress={() => irParaMes(-1)}
         hitSlop={12}
         style={styles.seta}
@@ -30,7 +38,7 @@ export function MonthHeader() {
       <Pressable
         onPress={() => router.push('/info')}
         hitSlop={8}
-        style={styles.info}
+        style={[styles.lateral, styles.info]}
         accessibilityRole="button"
         accessibilityLabel="Informações sobre seus dados">
         <Icone nome="info" cor={cores.textoSecundario} tamanho={22} />
@@ -49,12 +57,13 @@ const styles = StyleSheet.create({
   },
   seta: { padding: 4 },
   mes: { ...tipo.mes, minWidth: 190, textAlign: 'center' },
-  info: {
+  lateral: {
     position: 'absolute',
-    right: -4,
     width: 36,
     height: 36,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  menu: { left: -4 },
+  info: { right: -4 },
 });

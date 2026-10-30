@@ -15,9 +15,15 @@ const OPCOES: { secao: Secao; rotulo: string }[] = [
   { secao: 'fixos', rotulo: 'Fixo' },
   { secao: 'variaveis', rotulo: 'Variável' },
   { secao: 'compras', rotulo: 'Compra' },
+  { secao: 'contas', rotulo: 'Conta' },
 ];
 
-const ehSecao = (v: unknown): v is Secao => v === 'fixos' || v === 'variaveis' || v === 'compras';
+const ROTULO_VALOR: Partial<Record<Secao, string>> = {
+  compras: 'Valor estimado',
+  contas: 'Valor total',
+};
+
+const ehSecao = (v: unknown): v is Secao => OPCOES.some((o) => o.secao === v);
 
 function fechar() {
   if (router.canGoBack()) router.back();
@@ -33,7 +39,10 @@ export default function ItemModal() {
   const mesAtual = useFinance((s) => s.mesAtual);
   const original = useFinance((s) => {
     if (!secaoOrigem || !params.id) return undefined;
-    const lista = secaoOrigem === 'compras' ? s.compras : (s.meses[s.mesAtual]?.[secaoOrigem] ?? []);
+    const lista =
+      secaoOrigem === 'compras' || secaoOrigem === 'contas'
+        ? s[secaoOrigem]
+        : (s.meses[s.mesAtual]?.[secaoOrigem] ?? []);
     return lista.find((i) => i.id === params.id);
   });
   const salarioAtual = useFinance((s) => s.meses[s.mesAtual]?.salario ?? 0);
@@ -123,7 +132,7 @@ export default function ItemModal() {
           </>
         )}
 
-        <Text style={styles.rotulo}>{secao === 'compras' && !ehSalario ? 'Valor estimado' : 'Valor'}</Text>
+        <Text style={styles.rotulo}>{ehSalario ? 'Valor' : (ROTULO_VALOR[secao] ?? 'Valor')}</Text>
         <View style={[styles.campo, styles.campoValor]}>
           <Text style={styles.prefixo}>R$</Text>
           <TextInput
