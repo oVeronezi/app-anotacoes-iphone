@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { ItemRow } from '@/components/ItemRow';
+import { BarraSelecao, TituloSelecionavel, useSelecao } from '@/components/Selecao';
 import { soma, type Item, type Secao } from '@/store/useFinance';
 import { cores, fontes, tipo } from '@/theme';
 import { formatBRL } from '@/utils/money';
@@ -27,19 +28,31 @@ export function Tracejado() {
 type Props = { secao: Secao; itens: Item[]; rotuloTotal?: string };
 
 export function Section({ secao, itens, rotuloTotal = 'Total' }: Props) {
+  const selecao = useSelecao(
+    secao,
+    itens.map((i) => i.id),
+  );
+
   return (
     <View>
-      <Text style={[tipo.tituloSecao, styles.titulo]}>{TITULOS[secao]}</Text>
+      <TituloSelecionavel titulo={TITULOS[secao]} selecao={selecao} />
       {itens.length === 0 ? (
         <Text style={styles.vazio}>{VAZIO[secao]}</Text>
       ) : (
         itens.map((item, i) => (
           <Fragment key={item.id}>
             {i > 0 && <Tracejado />}
-            <ItemRow secao={secao} item={item} />
+            <ItemRow
+              secao={secao}
+              item={item}
+              selecionando={selecao.ativo}
+              selecionado={selecao.estaSelecionado(item.id)}
+              onAlternar={() => selecao.alternar(item.id)}
+            />
           </Fragment>
         ))
       )}
+      <BarraSelecao selecao={selecao} />
       <View style={styles.totalLinha}>
         <Text style={styles.totalRotulo}>{rotuloTotal}</Text>
         <Text style={styles.totalValor}>{formatBRL(soma(itens))}</Text>
@@ -49,7 +62,6 @@ export function Section({ secao, itens, rotuloTotal = 'Total' }: Props) {
 }
 
 const styles = StyleSheet.create({
-  titulo: { marginBottom: 4 },
   tracejado: {
     borderTopWidth: 1,
     borderStyle: 'dashed',

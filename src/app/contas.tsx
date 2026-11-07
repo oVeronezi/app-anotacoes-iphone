@@ -8,6 +8,7 @@ import { Fab } from '@/components/Fab';
 import { Icone } from '@/components/Icone';
 import { ResumoColunas } from '@/components/ResumoColunas';
 import { Tracejado } from '@/components/Section';
+import { BarraSelecao, TituloSelecionavel, useSelecao } from '@/components/Selecao';
 import { soma, totalPago, useFinance } from '@/store/useFinance';
 import { cores, LARGURA_MAX, tipo } from '@/theme';
 import { areaSegura } from '@/utils/areaSegura';
@@ -20,6 +21,10 @@ function voltar() {
 export default function Contas() {
   const insets = useSafeAreaInsets();
   const contas = useFinance((s) => s.contas);
+  const selecao = useSelecao(
+    'contas',
+    contas.map((c) => c.id),
+  );
 
   const total = soma(contas);
   const pago = contas.reduce((t, c) => t + totalPago(c), 0);
@@ -63,7 +68,7 @@ export default function Contas() {
           />
 
           <View>
-            <Text style={[tipo.tituloSecao, styles.titulo]}>Contas</Text>
+            <TituloSelecionavel titulo="Contas" selecao={selecao} />
             {contas.length === 0 ? (
               <Text style={styles.vazio}>
                 Nenhuma conta cadastrada. Toque em + para adicionar uma.
@@ -72,10 +77,16 @@ export default function Contas() {
               contas.map((conta, i) => (
                 <Fragment key={conta.id}>
                   {i > 0 && <Tracejado />}
-                  <ContaRow conta={conta} />
+                  <ContaRow
+                    conta={conta}
+                    selecionando={selecao.ativo}
+                    selecionado={selecao.estaSelecionado(conta.id)}
+                    onAlternar={() => selecao.alternar(conta.id)}
+                  />
                 </Fragment>
               ))
             )}
+            <BarraSelecao selecao={selecao} />
           </View>
         </View>
       </ScrollView>
@@ -97,6 +108,5 @@ const styles = StyleSheet.create({
     minHeight: 56,
   },
   voltar: { position: 'absolute', left: -4, padding: 4 },
-  titulo: { marginBottom: 4 },
   vazio: { ...tipo.item, color: cores.textoSecundario, paddingVertical: 14 },
 });

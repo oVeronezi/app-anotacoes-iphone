@@ -10,17 +10,31 @@ import { formatBRL } from '@/utils/money';
 /** "2026-10-30" -> "30/10/2026" */
 const dataBR = (data: string) => data.split('-').reverse().join('/');
 
-export function ContaRow({ conta }: { conta: Conta }) {
+type Props = {
+  conta: Conta;
+  selecionando?: boolean;
+  selecionado?: boolean;
+  onAlternar?: () => void;
+};
+
+export function ContaRow({ conta, selecionando = false, selecionado, onAlternar }: Props) {
   const restante = falta(conta);
   const quitada = restante <= 0;
 
   return (
     <View>
-      <ItemRow secao="contas" item={conta} />
+      <ItemRow
+        secao="contas"
+        item={conta}
+        selecionando={selecionando}
+        selecionado={selecionado}
+        onAlternar={onAlternar}
+      />
       <View style={styles.detalhes}>
         {conta.pagamentos.map((p) => (
           <Pressable
             key={p.id}
+            disabled={selecionando}
             style={styles.pagamento}
             onPress={() =>
               router.push({ pathname: '/pagamento', params: { conta: conta.id, id: p.id } })
@@ -47,14 +61,16 @@ export function ContaRow({ conta }: { conta: Conta }) {
           </View>
         )}
 
-        <Pressable
-          style={styles.botao}
-          onPress={() => router.push({ pathname: '/pagamento', params: { conta: conta.id } })}
-          accessibilityRole="button"
-          accessibilityLabel={`Adicionar pagamento em ${conta.titulo}`}>
-          <Icone nome="mais" cor={COR_SECAO.contas} tamanho={16} espessura={2.5} />
-          <Text style={styles.textoBotao}>Adicionar pagamento</Text>
-        </Pressable>
+        {!selecionando && (
+          <Pressable
+            style={styles.botao}
+            onPress={() => router.push({ pathname: '/pagamento', params: { conta: conta.id } })}
+            accessibilityRole="button"
+            accessibilityLabel={`Adicionar pagamento em ${conta.titulo}`}>
+            <Icone nome="mais" cor={COR_SECAO.contas} tamanho={16} espessura={2.5} />
+            <Text style={styles.textoBotao}>Adicionar pagamento</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );

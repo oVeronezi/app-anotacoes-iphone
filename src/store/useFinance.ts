@@ -48,6 +48,7 @@ type Estado = Dados & {
   setSalario: (centavos: number) => void;
   salvarItem: (secao: Secao, dados: ItemEditado, origem?: { secao: Secao; id: string }) => void;
   removerItem: (secao: Secao, id: string) => void;
+  removerItens: (secao: Secao, ids: string[]) => void;
   alternarComprado: (id: string) => void;
   salvarPagamento: (contaId: string, valor: number, id?: string) => void;
   removerPagamento: (contaId: string, id: string) => void;
@@ -103,15 +104,18 @@ export const useFinance = create<Estado>()(
       const alterarConta = (id: string, alterar: (conta: Conta) => Conta) =>
         set((s) => ({ contas: s.contas.map((c) => (c.id === id ? alterar(c) : c)) }));
 
-      const tirarItem = (secao: Secao, id: string) => {
+      const tirarItens = (secao: Secao, ids: string[]) => {
+        const fora = new Set(ids);
         if (secao === 'compras') {
-          set((s) => ({ compras: s.compras.filter((c) => c.id !== id) }));
+          set((s) => ({ compras: s.compras.filter((c) => !fora.has(c.id)) }));
         } else if (secao === 'contas') {
-          set((s) => ({ contas: s.contas.filter((c) => c.id !== id) }));
+          set((s) => ({ contas: s.contas.filter((c) => !fora.has(c.id)) }));
         } else {
-          alterarMes((mes) => ({ ...mes, [secao]: mes[secao].filter((i) => i.id !== id) }));
+          alterarMes((mes) => ({ ...mes, [secao]: mes[secao].filter((i) => !fora.has(i.id)) }));
         }
       };
+
+      const tirarItem = (secao: Secao, id: string) => tirarItens(secao, [id]);
 
       return {
         meses: {},
@@ -153,6 +157,8 @@ export const useFinance = create<Estado>()(
         },
 
         removerItem: tirarItem,
+
+        removerItens: tirarItens,
 
         alternarComprado: (id) =>
           set((s) => ({
